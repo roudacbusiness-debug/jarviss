@@ -43,7 +43,9 @@ Dans l'app, la page de connexion propose les deux : cliquer sur le lien, ou sais
 
 ## 4. Première connexion
 
-Entre `roudac.business@gmail.com` sur la page de connexion. Le **premier compte créé devient le seul autorisé** : toute autre inscription est refusée par un trigger en base. À la création du compte, les 7 matières et l'emploi du temps fixe (relevé depuis ta capture Pronote) sont insérés automatiquement.
+Le compte `roudac.business@gmail.com` existe déjà dans la base (il a servi aux tests, puis a été basculé sur ton adresse ; aucune session n'est ouverte et son mot de passe est aléatoire, donc inutilisable). Les 7 matières, les réglages et l'emploi du temps fixe (relevé depuis ta capture Pronote) y sont déjà rattachés.
+
+Entre cette adresse sur la page de connexion, puis clique sur le lien reçu ou saisis le code. Toute autre inscription est refusée par un trigger en base : **un seul compte**.
 
 Pour verrouiller encore plus : **Authentication → Sign In / Providers → Email** → décoche « Allow new users to sign up » une fois connecté.
 
