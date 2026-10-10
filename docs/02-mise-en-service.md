@@ -2,27 +2,23 @@
 
 Tout le code est prêt et la base Supabase est créée et migrée. Il reste quatre réglages à faire à la main, dans les interfaces Vercel et Supabase (ils ne sont pas accessibles depuis l'API utilisée par Claude).
 
-## 1. Déployer sur Vercel (5 min)
+## 1. Vercel : déjà déployé
 
-1. Ouvre https://vercel.com/new, choisis **Import Git Repository** → `roudacbusiness-debug/jarvis`.
-2. Framework : Next.js (détecté automatiquement). Branche de production : `main`.
-3. Dans **Environment Variables**, ajoute :
+L'app est en ligne sur **https://jarviss-brown.vercel.app** (projet Vercel `jarviss`).
 
-| Nom | Valeur |
-|---|---|
-| `NEXT_PUBLIC_SUPABASE_URL` | `https://zfulqlkchlzdmlvimove.supabase.co` |
-| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | `sb_publishable_Wi4F5XYsqbC9O-vHrHloqg_0nVCmiMC` |
+Le connecteur Vercel de Claude ne peut pas modifier les réglages du projet ni ses variables d'environnement, donc :
 
-4. Clique **Deploy**. Note l'URL obtenue (par ex. `https://jarvis-xxxx.vercel.app`).
+- les coordonnées Supabase (URL + clé *publishable*, publique par conception) sont intégrées au code avec valeurs par défaut (`lib/supabase/config.ts`) ; des variables d'environnement, si tu en ajoutes, ont la priorité ;
+- le déploiement est fait depuis le dépôt GitHub public `roudacbusiness-debug/jarviss` (miroir de `main` du dépôt privé `jarvis`). Pour redéployer : pousser sur `jarviss/main`, puis relancer un déploiement (ou relier le projet au dépôt dans Vercel → Settings → Git pour que ce soit automatique).
 
-Ensuite, chaque push sur `main` redéploie automatiquement.
+Si l'URL demande une connexion Vercel : Vercel → projet `jarviss` → Settings → Deployment Protection → désactiver « Vercel Authentication » pour la production.
 
 ## 2. Autoriser l'URL dans Supabase Auth (2 min)
 
 Dashboard Supabase → projet **jarvis** → **Authentication → URL Configuration** :
 
-- **Site URL** : `https://<ton-url>.vercel.app`
-- **Redirect URLs** : ajoute `https://<ton-url>.vercel.app/auth/callback` et `http://localhost:3000/auth/callback`
+- **Site URL** : `https://jarviss-brown.vercel.app`
+- **Redirect URLs** : ajoute `https://jarviss-brown.vercel.app/auth/callback`, `https://jarviss-*-roudacbusiness-debugs-projects.vercel.app/auth/callback` et `http://localhost:3000/auth/callback`
 
 Sans ça, le lien magique renvoie vers `localhost`.
 
