@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Manrope, Sora, JetBrains_Mono } from "next/font/google";
 import { Providers } from "@/components/providers";
+import { RegisterServiceWorker } from "@/components/pwa/register-sw";
 import "./globals.css";
 
 const sans = Manrope({
@@ -58,6 +59,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <Providers>{children}</Providers>
+        <RegisterServiceWorker />
       </body>
     </html>
   );

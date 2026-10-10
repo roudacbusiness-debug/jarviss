@@ -127,7 +127,7 @@ export function PdfReader({ id }: { id: string }) {
   return (
     <div className="flex h-dvh flex-col md:h-dvh">
       {/* Barre */}
-      <header className="flex items-center gap-2 border-b border-border bg-bg-elev px-2 py-2 md:px-4 safe-top">
+      <header className="flex items-center gap-2 border-b border-border bg-bg-elev px-2 py-2.5 md:px-4 safe-top">
         <Button variant="ghost" size="icon-sm" asChild>
           <Link href="/bibliotheque" aria-label="Retour">
             <ArrowLeft className="h-4 w-4" />
