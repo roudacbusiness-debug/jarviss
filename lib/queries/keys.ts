@@ -1,0 +1,15 @@
+export const qk = {
+  settings: ["settings"] as const,
+  subjects: ["subjects"] as const,
+  events: (from: string, to: string) => ["events", from, to] as const,
+  eventsAll: ["events"] as const,
+  evaluations: ["evaluations"] as const,
+  tasks: (eventId: string) => ["tasks", eventId] as const,
+  eventDocuments: (eventId: string) => ["event-documents", eventId] as const,
+  documents: ["documents"] as const,
+  document: (id: string) => ["documents", id] as const,
+  icalFeeds: ["ical-feeds"] as const,
+  icalEvents: (from: string, to: string) => ["ical-events", from, to] as const,
+  icalEventsAll: ["ical-events"] as const,
+  timetable: ["timetable"] as const,
+};
