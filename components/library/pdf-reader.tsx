@@ -13,7 +13,7 @@ import { usePlanDocument } from "./document-sheet";
 import { StatusIcon } from "./document-card";
 import { cn } from "@/lib/utils/cn";
 
-pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
+pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 const ZOOMS = [0.6, 0.8, 1, 1.25, 1.5, 2];
 
