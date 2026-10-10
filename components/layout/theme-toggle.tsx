@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
 import { Tip } from "@/components/ui/tooltip";
@@ -8,25 +7,27 @@ import { cn } from "@/lib/utils/cn";
 
 export function ThemeToggle({ className, withLabel }: { className?: string; withLabel?: boolean }) {
   const { resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  const dark = mounted ? resolvedTheme === "dark" : true;
-  const label = dark ? "Passer en mode clair" : "Passer en mode sombre";
 
   const btn = (
     <button
-      onClick={() => setTheme(dark ? "light" : "dark")}
+      onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
       className={cn(
         "flex h-10 items-center justify-center gap-2 rounded-md text-muted transition-colors hover:bg-surface-2 hover:text-fg focus-ring",
         withLabel ? "px-3 text-sm font-semibold" : "w-10",
         className,
       )}
-      aria-label={label}
+      aria-label="Changer de thème"
     >
-      {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-      {withLabel ? (dark ? "Mode clair" : "Mode sombre") : null}
+      <Sun className="hidden h-4 w-4 dark:block" />
+      <Moon className="h-4 w-4 dark:hidden" />
+      {withLabel ? (
+        <>
+          <span className="hidden dark:inline">Mode clair</span>
+          <span className="dark:hidden">Mode sombre</span>
+        </>
+      ) : null}
     </button>
   );
 
-  return withLabel ? btn : <Tip label={label} side="right">{btn}</Tip>;
+  return withLabel ? btn : <Tip label="Changer de thème" side="right">{btn}</Tip>;
 }

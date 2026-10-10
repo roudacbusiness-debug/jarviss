@@ -1,11 +1,7 @@
-import { PageHeader } from "@/components/layout/page-header";
+import { SettingsView } from "@/components/settings/settings-view";
 
 export const metadata = { title: "Réglages" };
 
 export default function ReglagesPage() {
-  return (
-    <>
-      <PageHeader title="Réglages" subtitle="Bientôt" />
-    </>
-  );
+  return <SettingsView />;
 }

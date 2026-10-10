@@ -149,7 +149,7 @@ export default function ConnexionPage() {
                 }}
                 className="w-full text-center text-sm text-muted hover:text-fg"
               >
-                Changer d'adresse ou renvoyer
+                Changer d&apos;adresse ou renvoyer
               </button>
             </form>
           )}
