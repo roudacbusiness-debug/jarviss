@@ -1,10 +1,11 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from "@/lib/supabase/config";
+import { AUTO_LOGIN } from "@/lib/supabase/auto-login";
 
-const PUBLIC_PATHS = ["/connexion", "/auth/callback", "/manifest.webmanifest", "/sw.js"];
+const PUBLIC_PATHS = ["/connexion", "/auth/callback", "/manifest.webmanifest", "/sw.js", "/hors-ligne"];
 
-/** Rafraîchit la session Supabase et protège les pages de l'application. */
+/** Rafraîchit la session Supabase ; sans session, connecte automatiquement le compte unique. */
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
 
@@ -29,10 +30,15 @@ export async function updateSession(request: NextRequest) {
 
   // Ne pas insérer de logique entre createServerClient et getClaims().
   const { data } = await supabase.auth.getClaims();
-  const user = data?.claims;
+  let user: boolean = !!data?.claims;
 
   const { pathname } = request.nextUrl;
   const isPublic = PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith(p + "/"));
+
+  if (!user && !isPublic) {
+    const { data: signed, error } = await supabase.auth.signInWithPassword(AUTO_LOGIN);
+    if (!error && signed.session) user = true;
+  }
 
   if (!user && !isPublic) {
     const url = request.nextUrl.clone();
