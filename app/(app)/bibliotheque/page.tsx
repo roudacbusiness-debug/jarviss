@@ -1,11 +1,7 @@
-import { PageHeader } from "@/components/layout/page-header";
+import { LibraryView } from "@/components/library/library-view";
 
 export const metadata = { title: "Bibliothèque" };
 
 export default function BibliothequePage() {
-  return (
-    <>
-      <PageHeader title="Bibliothèque" subtitle="Bientôt" />
-    </>
-  );
+  return <LibraryView />;
 }
