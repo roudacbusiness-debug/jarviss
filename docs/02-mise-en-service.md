@@ -2,16 +2,18 @@
 
 Tout le code est prêt et la base Supabase est créée et migrée. Il reste quatre réglages à faire à la main, dans les interfaces Vercel et Supabase (ils ne sont pas accessibles depuis l'API utilisée par Claude).
 
-## 1. Vercel : déjà déployé
+## 1. Vercel : un réglage à faire (Framework Preset)
 
-L'app est en ligne sur **https://jarviss-brown.vercel.app** (projet Vercel `jarviss`).
+Le projet Vercel `jarviss` est relié au dépôt GitHub public `roudacbusiness-debug/jarviss` (miroir de `main` du dépôt privé `jarvis`) : chaque push sur `jarviss/main` déclenche un déploiement. URL de production : **https://jarviss-brown.vercel.app**.
 
-Le connecteur Vercel de Claude ne peut pas modifier les réglages du projet ni ses variables d'environnement, donc :
+**Problème actuel** : le projet a été créé avec le Framework Preset « Other ». Le build réussit, mais Vercel ne reconnaît pas la sortie Next.js et toutes les pages renvoient 404. Le déploiement lancé par Claude via l'API avec le preset Next.js fonctionne, lui (`jarviss-3acf9mwk6-roudacbusiness-debugs-projects.vercel.app`), mais le connecteur n'a pas le droit de modifier le projet ni ses alias.
 
-- les coordonnées Supabase (URL + clé *publishable*, publique par conception) sont intégrées au code avec valeurs par défaut (`lib/supabase/config.ts`) ; des variables d'environnement, si tu en ajoutes, ont la priorité ;
-- le déploiement est fait depuis le dépôt GitHub public `roudacbusiness-debug/jarviss` (miroir de `main` du dépôt privé `jarvis`). Pour redéployer : pousser sur `jarviss/main`, puis relancer un déploiement (ou relier le projet au dépôt dans Vercel → Settings → Git pour que ce soit automatique).
+À faire (1 min) : Vercel → projet `jarviss` → **Settings → Build and Deployment → Framework Preset = Next.js** → Save, puis **Deployments → ⋯ → Redeploy** sur le dernier déploiement. Toutes les pages répondront.
 
-Si l'URL demande une connexion Vercel : Vercel → projet `jarviss` → Settings → Deployment Protection → désactiver « Vercel Authentication » pour la production.
+Autres points :
+
+- Les coordonnées Supabase (URL + clé *publishable*, publique par conception) sont intégrées au code avec valeurs par défaut (`lib/supabase/config.ts`) ; des variables d'environnement, si tu en ajoutes, ont la priorité.
+- Si l'URL demande une connexion Vercel : Settings → Deployment Protection → désactiver « Vercel Authentication » pour la production.
 
 ## 2. Autoriser l'URL dans Supabase Auth (2 min)
 
