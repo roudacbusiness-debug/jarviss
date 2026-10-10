@@ -7,5 +7,5 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
   const { data } = await supabase.auth.getClaims();
   if (!data?.claims) redirect("/connexion");
 
-  return <AppShell email={String(data.claims.email ?? "")}>{children}</AppShell>;
+  return <AppShell>{children}</AppShell>;
 }

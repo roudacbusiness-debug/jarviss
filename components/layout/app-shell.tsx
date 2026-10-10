@@ -1,10 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { CalendarDays, Library, LogOut, Settings2, Sparkles } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { CalendarDays, Library, Settings2, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { ThemeToggle } from "./theme-toggle";
 import { Tip } from "@/components/ui/tooltip";
@@ -15,15 +14,8 @@ const NAV = [
   { href: "/reglages", label: "Réglages", icon: Settings2 },
 ] as const;
 
-export function AppShell({ children, email }: { children: React.ReactNode; email: string }) {
+export function AppShell({ children }: { children: React.ReactNode; email?: string }) {
   const pathname = usePathname();
-  const router = useRouter();
-
-  async function signOut() {
-    await createClient().auth.signOut();
-    router.replace("/connexion");
-    router.refresh();
-  }
 
   return (
     <div className="flex min-h-dvh w-full">
@@ -60,15 +52,6 @@ export function AppShell({ children, email }: { children: React.ReactNode; email
         </nav>
         <div className="flex flex-col items-center gap-1">
           <ThemeToggle />
-          <Tip label={`Déconnexion (${email})`} side="right">
-            <button
-              onClick={signOut}
-              className="flex h-10 w-10 items-center justify-center rounded-md text-muted transition-colors hover:bg-surface-2 hover:text-fg focus-ring"
-              aria-label="Déconnexion"
-            >
-              <LogOut className="h-4 w-4" />
-            </button>
-          </Tip>
         </div>
       </aside>
 
