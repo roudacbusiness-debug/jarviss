@@ -127,7 +127,7 @@ export function TimeGrid({
       return {
         day,
         laid: layoutColumn(items, range, 20),
-        bg: bg.map((b) => ({ item: b, ...range({ start: tz(b.start, timezone), end: tz(b.end, timezone) }) })),
+        bg: layoutColumn(bg, (b) => range({ start: tz(b.start, timezone), end: tz(b.end, timezone) }), 10),
       };
     });
   }, [days, events, evaluations, background, timezone, startMin, endMin]);
@@ -326,14 +326,19 @@ export function TimeGrid({
                   }}
                 >
                   {/* Cours (fond grisé) */}
-                  {bg.map(({ item, start, end }) => (
+                  {bg.map(({ item, top, height, col, cols }) => (
                     <div
                       key={item.id}
-                      className="pointer-events-none absolute inset-x-[2px] overflow-hidden rounded-sm border border-dashed border-border-strong/60 bg-ical px-1.5 py-1 text-ical-fg"
-                      style={{ top: (start - startMin) * pxPerMin, height: Math.max(14, (end - start) * pxPerMin - 2) }}
+                      className="pointer-events-none absolute overflow-hidden rounded-sm border border-dashed border-border-strong/60 bg-ical px-1.5 py-1 text-ical-fg"
+                      style={{
+                        top: (top - startMin) * pxPerMin,
+                        height: Math.max(14, height * pxPerMin - 2),
+                        left: `calc(${(100 / cols) * col}% + 2px)`,
+                        width: `calc(${100 / cols}% - 4px)`,
+                      }}
                     >
                       <p className="truncate text-[10.5px] font-bold uppercase leading-tight tracking-wide">{item.label}</p>
-                      {item.sub && end - start >= 45 ? <p className="truncate text-[10px] leading-tight opacity-80">{item.sub}</p> : null}
+                      {item.sub && height >= 45 ? <p className="truncate text-[10px] leading-tight opacity-80">{item.sub}</p> : null}
                     </div>
                   ))}
 
