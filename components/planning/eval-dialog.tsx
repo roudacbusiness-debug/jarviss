@@ -8,7 +8,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Field, Input, Textarea } from "@/components/ui/input";
 import { Segmented } from "@/components/ui/segmented";
-import { combine, fmt, isoDate, tz } from "@/lib/dates";
+import { combine, fmt, isoDate, toIso, tz } from "@/lib/dates";
 import { EVAL_TYPE_LABEL, useCreateEvaluation, useDeleteEvaluation, useEvaluations, useUpdateEvaluation } from "@/lib/queries/evaluations";
 import { useSubjects } from "@/lib/queries/subjects";
 import { useSettings } from "@/lib/queries/settings";
@@ -64,8 +64,8 @@ function EvalForm({ evaluation, defaultDate, onClose }: { evaluation?: Evaluatio
       subject_id: effectiveSubject,
       title: title.trim(),
       eval_type: type,
-      starts_at: start.toISOString(),
-      ends_at: addMinutes(start, duration).toISOString(),
+      starts_at: toIso(start),
+      ends_at: toIso(addMinutes(start, duration)),
       notes: notes.trim(),
     };
     try {

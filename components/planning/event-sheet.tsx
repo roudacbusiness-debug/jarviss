@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Field, Input, Textarea } from "@/components/ui/input";
 import { Segmented } from "@/components/ui/segmented";
 import { SubjectIcon } from "@/lib/subjects/icons";
-import { combine, fmt, isoDate, tz } from "@/lib/dates";
+import { combine, fmt, isoDate, toIso, tz } from "@/lib/dates";
 import { useCreateEvent, useDeleteEvent, useEvent, useTaskMutations, useTasks, useUpdateEvent, type EventWithMeta } from "@/lib/queries/events";
 import { useSubjects } from "@/lib/queries/subjects";
 import { useSettings } from "@/lib/queries/settings";
@@ -79,7 +79,7 @@ function EventForm({
 
   function computeRange(d = date, t = startTime, dur = duration) {
     const start = combine(d, t, timezone);
-    return { starts_at: start.toISOString(), ends_at: addMinutes(start, dur).toISOString() };
+    return { starts_at: toIso(start), ends_at: toIso(addMinutes(start, dur)) };
   }
 
   async function save(patch: Partial<StudyEvent>) {

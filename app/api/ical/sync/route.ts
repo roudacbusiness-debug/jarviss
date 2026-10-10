@@ -52,8 +52,8 @@ function parseIcs(ics: string, feedId: string, tzFallback: string): Row[] {
       uid,
       summary: summary.slice(0, 200),
       location: location.slice(0, 200),
-      starts_at: start.toISOString(),
-      ends_at: end.toISOString(),
+      starts_at: new Date(start.getTime()).toISOString(),
+      ends_at: new Date(end.getTime()).toISOString(),
     });
   };
 

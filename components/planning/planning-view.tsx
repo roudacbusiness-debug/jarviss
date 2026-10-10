@@ -11,7 +11,7 @@ import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Tip } from "@/components/ui/tooltip";
 import { useIsDesktop, useIsWide } from "@/hooks/use-media-query";
-import { combine, fmt, isoDate, isoWeekday, nowTz, roundToStep, weekDays, weekStart } from "@/lib/dates";
+import { combine, fmt, isoDate, isoWeekday, nowTz, roundToStep, toIso, weekDays, weekStart } from "@/lib/dates";
 import { useEvents, useUpdateEvent } from "@/lib/queries/events";
 import { useEvaluations, useUpdateEvaluation } from "@/lib/queries/evaluations";
 import { useIcalEvents, useIcalFeeds, useSyncIcal } from "@/lib/queries/ical";
@@ -41,17 +41,17 @@ export function PlanningView() {
   const wEnd = useMemo(() => addDays(wStart, 7), [wStart]);
   const days = useMemo(() => (view === "week" ? weekDays(wStart) : [anchorTz]), [view, wStart, anchorTz]);
 
-  const fromIso = wStart.toISOString();
-  const toIso = wEnd.toISOString();
+  const fromIso = toIso(wStart);
+  const toIsoRange = toIso(wEnd);
 
-  const { events } = useEvents(fromIso, toIso);
+  const { events } = useEvents(fromIso, toIsoRange);
   const { evaluations } = useEvaluations();
   const { subjects } = useSubjects();
   const subjectMap = useSubjectMap();
   const { slots } = useTimetable();
   const { feeds } = useIcalFeeds();
   const hasFeeds = feeds.some((f) => f.enabled);
-  const { icalEvents } = useIcalEvents(fromIso, toIso, hasFeeds);
+  const { icalEvents } = useIcalEvents(fromIso, toIsoRange, hasFeeds);
   const sync = useSyncIcal();
   const updateEvent = useUpdateEvent();
   const updateEval = useUpdateEvaluation();
@@ -114,16 +114,16 @@ export function PlanningView() {
 
   // Handlers de la grille
   function onCreate(start: Date, end: Date) {
-    openDraft({ starts_at: start.toISOString(), ends_at: end.toISOString() });
+    openDraft({ starts_at: toIso(start), ends_at: toIso(end) });
   }
   function onMoveEvent(id: string, start: Date, end: Date) {
-    updateEvent.mutate({ id, starts_at: start.toISOString(), ends_at: end.toISOString() }, { onError: () => toast.error("Déplacement impossible") });
+    updateEvent.mutate({ id, starts_at: toIso(start), ends_at: toIso(end) }, { onError: () => toast.error("Déplacement impossible") });
   }
   function onMoveEval(id: string, start: Date, end: Date) {
-    updateEval.mutate({ id, starts_at: start.toISOString(), ends_at: end.toISOString() }, { onError: () => toast.error("Déplacement impossible") });
+    updateEval.mutate({ id, starts_at: toIso(start), ends_at: toIso(end) }, { onError: () => toast.error("Déplacement impossible") });
   }
   function onResizeEvent(id: string, end: Date) {
-    updateEvent.mutate({ id, ends_at: end.toISOString() }, { onError: () => toast.error("Redimensionnement impossible") });
+    updateEvent.mutate({ id, ends_at: toIso(end) }, { onError: () => toast.error("Redimensionnement impossible") });
   }
   function onToggleStatus(id: string, status: "prevu" | "fait" | "rate") {
     updateEvent.mutate({ id, status });
@@ -132,7 +132,7 @@ export function PlanningView() {
   function quickBlock() {
     const n = nowTz(timezone);
     const base = isSameDay(n, anchorTz) ? roundToStep(addMinutes(n, 15) as typeof n, 15) : combine(anchor, "18:00", timezone);
-    openDraft({ starts_at: base.toISOString(), ends_at: addMinutes(base, 60).toISOString() });
+    openDraft({ starts_at: toIso(base), ends_at: toIso(addMinutes(base, 60)) });
   }
 
   function onSwipe(_: unknown, info: PanInfo) {
@@ -145,7 +145,9 @@ export function PlanningView() {
   const title =
     view === "week"
       ? `${fmt(wStart, "d")}${fmt(wStart, "MMM") !== fmt(subDays(wEnd, 1), "MMM") ? fmt(wStart, " MMM") : ""} – ${fmt(subDays(wEnd, 1), "d MMM yyyy")}`
-      : fmt(anchorTz, "EEEE d MMMM");
+      : isDesktop
+        ? fmt(anchorTz, "EEEE d MMMM")
+        : fmt(anchorTz, "EEE d MMM");
   const weekEvents = events;
   const isToday = isSameDay(nowTz(timezone), anchorTz);
 

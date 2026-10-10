@@ -10,6 +10,11 @@ export function tz(date: Date | string | number, timezone: string): TZDate {
   return new TZDate(d.getTime(), timezone);
 }
 
+/** ISO 8601 en UTC (TZDate.toISOString() renvoie sinon un décalage local). */
+export function toIso(d: Date): string {
+  return new Date(d.getTime()).toISOString();
+}
+
 export function nowTz(timezone: string): TZDate {
   return TZDate.tz(timezone);
 }

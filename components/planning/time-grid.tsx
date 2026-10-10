@@ -251,7 +251,7 @@ export function TimeGrid({
   return (
     <div ref={scrollRef} className={cn("relative flex-1 overflow-y-auto overflow-x-hidden overscroll-contain", className)} data-scroll>
       {showHeader ? (
-        <div className="sticky top-0 z-30 flex border-b border-border bg-bg/85 backdrop-blur-md">
+        <div className="sticky top-0 z-30 flex border-b border-border bg-bg">
           <div className="w-[52px] shrink-0 md:w-[60px]" />
           {days.map((d) => {
             const today = isSameDay(d, nowTz);
